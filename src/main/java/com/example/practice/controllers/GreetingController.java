@@ -37,5 +37,8 @@ public class GreetingController {
         // any "plumbing or infrastructure"
 
         // When you want to build an executable jar, you can use ./gradlew bootRun
+
+        // When it is running, go to localhost:8080/greeting, and add ?name=User if you want the name to be user.
+        // Also, notice that the count auto-increments. This is neat.
     }
 }
