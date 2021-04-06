@@ -42,7 +42,7 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
 
         // Checking for my own curiosity what this looks like
         System.out.println("DEBUG: Printing out all of the names");
-        System.out.println(splitUpNames.toString());
+        splitUpNames.forEach(name -> System.out.println(Arrays.toString(name)));
 
         // Use a Java 8 stream to print out each tuple of the list
         splitUpNames.forEach(name -> log.info(String.format("Inserting customer record for %s %s", name[0], name[1])));
@@ -50,6 +50,7 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
         // Uses JdbcTemplate's batchUpdate operation to bulk load data
         jdbcTemplate.batchUpdate("INSERT INTO customers(first_name, last_name) VALUES (?,?)", splitUpNames);
         // jdbcTemplate.batchUpdate() takes an array and then automatically populates the contents of that array in those ? bits, I think
+        // Apparently those ? indicators in there prevent SQL injection attacks by instructing JDBC to bind variables.
 
         log.info("Querying for customer records where first_name = 'Josh':");
         // Apparently jdbcTemplate.query is depricated, they should be using something else here, but I don't know what.
@@ -59,5 +60,9 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
         ).forEach(customer -> log.info(customer.toString()));
         // Okay, it looks like the jdbcTemplate.query should be replaced with jdbcTemplate.queryForObject, but I would
         // have to mess with this to get it to come out not depricated. Thus, for the purposes of this guide, I will not.
+
+        // From the guide: Java 8 lambdas map nicely onto single method interfaces, such as Spring’s RowMapper.
+        // If you use Java 7 or earlier, you can plug in an anonymous interface implementation and have the method body
+        // be the same as the lambda expression’s body.
     }
 }
